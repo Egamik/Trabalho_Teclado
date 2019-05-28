@@ -1,0 +1,62 @@
+import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.JPanel;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JRadioButton;
+
+public class SelectionTab extends JPanel{
+	
+	private JRadioButton sel1, sel2, sel3, sel4, sel5;
+	
+	public SelectionTab() {
+		this.setLayout(new FlowLayout());
+		
+		this.sel1 = new JRadioButton("Um pequeno jabuti xereta viu dez cegonhas felizes (42 letras)");
+		this.sel2 = new JRadioButton("Quem traz CD, LP, fax, engov e whisky JB?	(29	letras)");
+		this.sel3 = new JRadioButton("Gazeta publica hoje breve nota de faxina na quermesse. (46 letras)");
+		this.sel4 = new JRadioButton("Jovem craque belga prediz falhas no xote. (34 letras)");
+		this.sel5 = new JRadioButton("Bancos fúteis pagavam-lhe queijo, whisky e xadrez. (41 letras)");
+		
+		ButtonGroup group = new ButtonGroup();
+		group.add(sel1);
+		group.add(sel2);
+		group.add(sel3);
+		group.add(sel4);
+		group.add(sel5);
+		
+		radioHandler han = new radioHandler();
+		sel1.addActionListener(han);
+		sel2.addActionListener(han);
+		sel3.addActionListener(han);
+		
+		add(sel1);
+		add(sel2);
+		add(sel3);
+		add(sel4);
+		add(sel5);
+
+	}
+	
+	private class radioHandler implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == sel1) {
+				//compute.setStr("Um pequeno jabuti xereta viu dez cegonhas felizes");
+			} else if(e.getSource() == sel2) {
+				//compute.setStr("Quem traz CD, LP, fax, engov e whisky JB?");
+			} else if(e.getSource() == sel3) {
+				//compute.setStr("Gazeta publica hoje breve nota de faxina na quermesse.");
+			} else if(e.getSource() == sel4) {
+				//compute.setStr("Jovem craque belga prediz falhas no xote.");
+			} else if(e.getSource() == sel5) {
+				//compute.setStr("Bancos fúteis pagavam-lhe queijo, whisky e xadrez.");
+			}
+			
+		}
+		
+	}
+
+}
