@@ -1,0 +1,28 @@
+package _Teclado;
+
+import javax.swing.JTabbedPane;
+import javax.swing.JFrame;
+
+public class Main {
+	
+	public static void main(String[] args) {
+
+		Teclado_op operator = new Teclado_op();				// Back-end 
+		Keyboard keyboard = new Keyboard(operator);			// Aba Teste Pangrama
+		HistoryTab htab = new HistoryTab();					// Aba Historico
+		
+		SelectionTab tab = new SelectionTab();		// Aba Selection
+		JTabbedPane tabs = new JTabbedPane();
+		JFrame frame = new JFrame();
+		
+		tabs.addTab("Teclado", keyboard);
+		tabs.addTab("Pangramas", tab);
+		tabs.addTab("Historico", htab);
+		frame.add(tabs);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setVisible(true);
+		frame.setSize(800, 500);
+		
+	}
+
+}
