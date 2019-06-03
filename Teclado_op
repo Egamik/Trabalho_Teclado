@@ -1,0 +1,58 @@
+package _Teclado;
+
+public class Teclado_op {
+
+	private static String str = "";				  //input String
+	private static  String strToCompare = "";   //Reference String
+	private static boolean caps = false;
+	private static int erros = 0, acertos = 0;	
+	
+	public static void addStrRef(String s) {
+		strToCompare = s;
+	}
+	
+	public static void capsOn() {
+		caps = true;
+	}
+	
+	public static void capsOff() {
+		caps = false;
+	}
+	
+	public static void toggleCaps() {
+		caps = !caps;
+	}
+	
+	public static void enter() {
+		HistoryTab.addHist(str);
+		HistoryTab.setAcertos(acertos);
+		HistoryTab.setErros(erros);
+		str = "";
+	}
+	
+	public static void typed(char a) {
+		String s = Character.toString(a);
+		if(caps == true) {
+			str += s.toUpperCase();
+		} else if(caps == false) {
+			str += s;
+		}
+		compare();
+	}
+	
+	public static void delete() {
+		str = str.substring(0, str.length() - 1);
+	}
+	
+	public static void compare() {
+		if(!strToCompare.equals(null)) {
+			if(strToCompare.charAt(str.length() - 1) == str.charAt(str.length() - 1)) {
+				acertos++;
+			} else {
+				erros++;
+			}
+		} else {
+			throw new IllegalArgumentException("Selecione Pangrama referência!");
+		}
+	}
+}
