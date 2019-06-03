@@ -1,0 +1,62 @@
+package _Teclado;
+
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+import javax.swing.SwingConstants;
+import javax.swing.GroupLayout;
+import javax.swing.JLabel;
+
+public class HistoryTab extends JPanel{
+	private static String history = "";
+	private static JTextArea display;
+	private static JLabel lblAcerto, lblErro;
+	public static String newLine = System.getProperty("line.separator");
+	
+	public HistoryTab() {
+
+		display = new JTextArea(history);
+		display.setEditable(false);
+		lblAcerto = new JLabel("Acertos: ");
+		lblErro = new JLabel("Erros: ");
+		GroupLayout layout = new GroupLayout(this);
+		this.setLayout(layout);
+		layout.setAutoCreateContainerGaps(true);
+		layout.setAutoCreateGaps(true);
+		layout.linkSize(SwingConstants.VERTICAL, lblAcerto, lblErro);
+		
+		GroupLayout.ParallelGroup hgroup = layout.createParallelGroup();
+		hgroup.addComponent(display);
+		hgroup.addGroup(layout.createParallelGroup())
+				.addComponent(lblAcerto)
+				.addComponent(lblErro);
+		layout.setHorizontalGroup(hgroup);
+		
+		GroupLayout.SequentialGroup vgroup = layout.createSequentialGroup();
+		vgroup.addComponent(display);
+		vgroup.addGroup(layout.createSequentialGroup())
+				.addComponent(lblAcerto)
+				.addComponent(lblErro);
+		layout.setVerticalGroup(vgroup);
+		
+	}
+	
+	public static void setHistory(String h) {
+		history = h;
+	}
+	
+	public static void addHist(String h) {
+		history = Register.readFile() + newLine + h;
+		Register.writeFile(history);
+		display.setText(history);
+		Register.writeFile(history);
+	}
+	
+	public static void setAcertos(int a) {
+		lblAcerto.setText("Acertos: " + a);
+	}
+	
+	public static void setErros(int e) {
+		lblErro.setText("Erros: " + e);
+	}
+
+}
