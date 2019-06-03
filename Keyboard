@@ -1,0 +1,163 @@
+package _Teclado;
+
+import javax.swing.*;   // JFrame, JPanel, JLabel, JButton
+import java.awt.*;      // GridBagLayout, GridBagConstraints, Insets, Font
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.ArrayList;
+
+import javax.accessibility.AccessibleContext;
+
+public class Keyboard extends JPanel{
+
+    private final JPanel keyboard = new JPanel();		//Keyboard only
+    private JTextArea txt = new JTextArea();
+    private JButton[] btns = new JButton[57];
+    private Color deft;
+    private static JLabel label = new JLabel("Selecione o pangrama na aba Pangramas!");
+
+    private static final String[][] key = {
+        {"~", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "-", "+", "Backspace"}, //14
+        {"Tab", "Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P", "[", "]", "\\"},		//14
+        {"Caps", "A", "S", "D", "F", "G", "H", "J", "K", "L", ";", "'", "Enter"},		//13
+        {"Shift", "Z", "X", "C", "V", "B", "N", "M", ",", ".", "?", "\u2191"},			//12
+        {" ", "<", "\u2193", ">"}														//4
+    };
+
+    public Keyboard(Teclado_op operator) {
+    	
+        keyboard.setLayout(new GridBagLayout());
+      
+        Insets zeroInset = new Insets(0, 0, 0, 0);
+        Font monospace = new Font(Font.MONOSPACED, Font.PLAIN, 12);
+
+        JPanel pRow;
+        JButton b;
+
+        GridBagConstraints cRow = new GridBagConstraints(),
+                           cButton = new GridBagConstraints();
+        cRow.anchor = GridBagConstraints.WEST;
+        cButton.ipady = 21;
+
+        // first dimension of the key array
+        // representing a row on the keyboard
+        int t = 0;
+        for (int row = 0, i = 0; row < key.length; ++row) {
+            pRow = new JPanel(new GridBagLayout());
+            cRow.gridy = row;
+
+            // second dimension representing each key
+            for (int col = 0; col < key[row].length; ++col, i++) {
+                // specify padding and insets for the buttons
+                switch (key[row][col]) {
+                    case "Backspace":   cButton.ipadx = 0; break;
+                    case "Tab":         cButton.ipadx = 17; break;
+                    case "Caps":        cButton.ipadx = 10; break;
+                    case "Enter":       cButton.ipadx = 27; break;
+                    case "Shift":       cButton.ipadx = 27; break;
+                    case "?":
+                        cButton.insets = new Insets(0, 0, 0, 24);
+                        break;
+                    case " ":
+                        cButton.ipadx = 247;
+                        cButton.insets = new Insets(0, 192, 0, 72);
+                        break;
+                    default:
+                        cButton.ipadx = 7;
+                        cButton.insets = zeroInset;
+                }
+                               
+                btns[t] = new JButton(key[row][col]);
+                btns[t].setFont(monospace);
+                btns[t].setFocusable(true);
+                pRow.add(btns[t], cButton);
+                deft = btns[t].getBackground();
+                t++;
+                //System.out.println(b.getText());
+            }
+            
+            keyboard.add(pRow, cRow);
+        }        
+
+        this.txt = new JTextArea();
+        txt.addKeyListener(new keyHandler());
+
+        GroupLayout layout = new GroupLayout(this);
+        layout.setAutoCreateContainerGaps(true);
+        GroupLayout.ParallelGroup hgroup = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        hgroup.addComponent(txt);
+        hgroup.addComponent(label);
+        hgroup.addComponent(keyboard);
+        layout.setHorizontalGroup(hgroup);
+        
+        GroupLayout.SequentialGroup vgroup = layout.createSequentialGroup();
+        vgroup.addComponent(txt);
+        vgroup.addComponent(label);
+        vgroup.addComponent(keyboard);
+        layout.setVerticalGroup(vgroup);
+        
+        this.setLayout(layout);
+        this.add(txt);
+        this.add(keyboard);
+    }
+    
+    public void press(String btn) {
+    	for(int i = 0; i<57; i++) {
+			if(btns[i].getText().equals(btn)) {
+				btns[i].setBackground(Color.RED);
+				break;
+			}
+		}
+    }
+    
+    public void release(String btn) {
+    	for(int i = 0; i<57; i++) {
+			if(btns[i].getText().equals(btn)) {
+				btns[i].setBackground(deft);
+				break;
+			}
+		}
+    }
+    
+    public static void setLabel(String l) {
+    	label.setText(l);
+    }
+
+	private class keyHandler implements KeyListener{
+
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if(e.getKeyCode() == 16) {			//Shift
+				Teclado_op.capsOn();
+			} else if(e.getKeyCode() == 20) {	//Caps lock
+				Teclado_op.toggleCaps();
+			} else if(e.getKeyCode() == 10) {	//Enter
+				Teclado_op.enter();
+				txt.setText("");
+			} else if (e.getKeyCode() == 8) {	//Backspace
+				Teclado_op.delete();
+			}
+			
+			if(e.isActionKey() && e.getKeyCode() != 20 && e.getKeyCode() == 37 && e.getKeyCode() == 38 && e.getKeyCode() == 39 && e.getKeyCode() == 40) {	//Exeção para teclas fora do programa
+				throw new IllegalArgumentException("Invalid Key");
+			} 
+			press(KeyEvent.getKeyText(e.getKeyCode()));
+		}
+
+		@Override
+		public void keyReleased(KeyEvent e) {
+			if(e.getKeyCode() == 16) {
+				Teclado_op.capsOff();
+			}
+			release(KeyEvent.getKeyText(e.getKeyCode()));
+		}
+
+		@Override
+		public void keyTyped(KeyEvent e) {
+			if(e.getKeyChar() != '') {
+				Teclado_op.typed(e.getKeyChar());
+			}
+		}
+	}
+
+}
